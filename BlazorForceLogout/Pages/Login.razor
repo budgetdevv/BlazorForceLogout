@@ -1,0 +1,94 @@
+﻿@page "/login"
+
+<PageTitle>Login</PageTitle>
+
+@code
+{
+    private string Username, LogoutReason;
+
+    private bool DisplayExistingSessionError, DisplayLogInSuccess, DisplayForceLoggedOut;
+
+    protected override void OnInitialized()
+    {
+        DisplayExistingSessionError = DisplayLogInSuccess = DisplayForceLoggedOut = false;
+    }
+
+    private void LogMeIn() //@OnClick calls StateHasChanged() for us
+    {
+        DisplayLogInSuccess = LoginManager.TryLogin(Username, ForceLogOut);
+
+        DisplayExistingSessionError = !DisplayLogInSuccess;
+    }
+
+    private void LogOutExistingSession() //@OnClick calls StateHasChanged() for us
+    {
+        if (LoginManager.TryForceLogout(Username, out var Handle))
+        {
+            Handle("User requested for existing session to be logged out!");
+        }
+    }
+
+    private void ForceLogOut(string Reason) //InvokeAync() calls StateHasChanged() for us
+    {
+        //We need this to execute the callback on UI thread
+        InvokeAsync(() =>
+        {
+            DisplayForceLoggedOut = true;
+        
+            LogoutReason = Reason;
+        
+            DisplayLogInSuccess = false;
+            
+            StateHasChanged();
+        });
+    }
+    
+    private static class LoginManager
+    {
+        public delegate void LogoutCallback(string Reason);
+
+        private static readonly Dictionary<string, LogoutCallback> UserHandles = new Dictionary<string, LogoutCallback>();
+
+        public static bool TryLogin(string Username, LogoutCallback Callback)
+        {
+            return UserHandles.TryAdd(Username, Callback);
+        }
+
+        public static bool TryForceLogout(string Username, out LogoutCallback LogoutCallback)
+        {
+            return UserHandles.Remove(Username, out LogoutCallback);
+        }
+    }
+}
+
+@{
+    if (!DisplayLogInSuccess)
+    {
+        <h1>Login</h1>
+
+        <input @bind="Username" />
+
+        <button class="btn btn-primary" @onclick="LogMeIn">Login!</button>
+        
+        if (DisplayExistingSessionError)
+        {
+            <br/><br/><br/> //I suck @ HTML
+            <text>You have an existing session! Click on the button below to log that session off</text>
+        
+            <br/><br/><br/> //I suck @ HTML
+            <button class="btn btn-primary" @onclick="LogOutExistingSession">Log off existing session!</button>
+        }
+        
+        if (DisplayForceLoggedOut)
+        {
+            <br/><br/><br/> //I suck @ HTML
+            
+            <text>You've been forcefully logged out@(LogoutReason != null ? $" for reason: {LogoutReason}" : "")!</text>
+        }
+    }
+
+    else
+    {
+        <text>You've successfully logged in as @Username !</text>
+    }
+}

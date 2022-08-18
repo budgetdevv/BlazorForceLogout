@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorForceLogout", "BlazorForceLogout\BlazorForceLogout.csproj", "{A221DB03-B468-4A25-A0D4-C4D54B2A7879}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A221DB03-B468-4A25-A0D4-C4D54B2A7879}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A221DB03-B468-4A25-A0D4-C4D54B2A7879}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A221DB03-B468-4A25-A0D4-C4D54B2A7879}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A221DB03-B468-4A25-A0D4-C4D54B2A7879}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
